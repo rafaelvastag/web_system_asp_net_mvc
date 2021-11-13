@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesSystemMVC.Models;
+using SalesSystemMVC.Models.ViewModels;
 using SalesSystemMVC.Services;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace SalesSystemMVC.Controllers
     {
 
         private readonly SellerService _sellerService;
+        private readonly DepartmentService _departmentService;
 
-        public SellersController(SellerService sellerService)
+        public SellersController(SellerService sellerService, DepartmentService departmentService)
         {
             _sellerService = sellerService;
+            _departmentService = departmentService;
         }
 
         public IActionResult Index()
@@ -27,7 +30,9 @@ namespace SalesSystemMVC.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewModel() { Departments = departments };
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -35,6 +40,31 @@ namespace SalesSystemMVC.Controllers
         public IActionResult Create(Seller sel)
         {
             _sellerService.Insert(sel);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (null == id)
+            {
+                return NotFound();
+            }
+
+            var seller = _sellerService.FindById(id.Value);
+
+            if (null == seller)
+            {
+                return NotFound();
+            }
+
+            return View(seller);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
         }
     }
