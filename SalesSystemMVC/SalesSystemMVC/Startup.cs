@@ -43,6 +43,9 @@ namespace SalesSystemMVC
             services.AddDbContext<SalesSystemMVCContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("SalesSystemMVCContext"), builder => builder.MigrationsAssembly("SalesSystemMVC")));
 
+            services.AddDbContext<UsuarioDbContext>(
+              options => SqlServerDbContextOptionsExtensions.UseSqlServer(options, Configuration.GetConnectionString("SQLConnectionString")));
+
             services.AddScoped<SeedingService>();
             services.AddScoped<SellerService>();
             services.AddScoped<DepartmentService>();
