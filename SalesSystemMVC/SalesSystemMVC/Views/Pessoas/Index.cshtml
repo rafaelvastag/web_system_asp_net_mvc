@@ -1,23 +1,21 @@
 ﻿@model IEnumerable<SalesSystemMVC.Models.Pessoa>
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Pessoas";
 }
 
-<!DOCTYPE html>
+<h2>@ViewData["Title"]</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<a asp-action="Create" class="btn btn-default">Create New</a>
+
+<hr />
+
+<table class="table table-striped table-hover">
     <thead>
-        <tr>
+        <tr class="success">
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
@@ -25,14 +23,33 @@
                 @Html.DisplayNameFor(model => model.CPF)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Endereco)
+                @Html.DisplayNameFor(model => model.Endereco.Logradouro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Endereco.Numero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Endereco.CEP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Endereco.Bairro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Endereco.Cidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Endereco.Estado)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nome)
             </td>
@@ -40,16 +57,29 @@
                 @Html.DisplayFor(modelItem => item.CPF)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Endereco.Id)
+                @Html.DisplayFor(modelItem => item.Endereco.Logradouro)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @Html.DisplayFor(modelItem => item.Endereco.Numero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco.CEP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco.Bairro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco.Cidade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco.Estado)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
-</body>
-</html>
