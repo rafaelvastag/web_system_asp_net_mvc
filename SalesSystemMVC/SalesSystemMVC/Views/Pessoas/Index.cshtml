@@ -40,6 +40,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Endereco.Estado)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PessoaTelefone.FirstOrDefault().Telefone.DDD)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PessoaTelefone.FirstOrDefault().Telefone.Numero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PessoaTelefone.FirstOrDefault().Telefone.TipoTelefone.Tipo)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -75,8 +84,16 @@
                 @Html.DisplayFor(modelItem => item.Endereco.Estado)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.PessoaTelefone.FirstOrDefault().Telefone.DDD)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PessoaTelefone.FirstOrDefault().Telefone.Numero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PessoaTelefone.FirstOrDefault().Telefone.TipoTelefone.Tipo)
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SalesSystemMVC.Data;
 using SalesSystemMVC.Models;
+using SalesSystemMVC.Models.ViewModels;
 
 namespace SalesSystemMVC.Controllers
 {
@@ -22,7 +23,7 @@ namespace SalesSystemMVC.Controllers
         // GET: Pessoas
         public async Task<IActionResult> Index()
         {
-            var usuarioDbContext = _context.Pessoa.Include(p => p.Endereco);
+            var usuarioDbContext = _context.Pessoa.Include(p => p.Endereco).Include(tp => tp.PessoaTelefone).ThenInclude(t => t.Telefone).ThenInclude(t => t.TipoTelefone);
             return View(await usuarioDbContext.ToListAsync());
         }
 
@@ -48,7 +49,6 @@ namespace SalesSystemMVC.Controllers
         // GET: Pessoas/Create
         public IActionResult Create()
         {
-            ViewData["EnderecoId"] = new SelectList(_context.Endereco, "Id", "Id");
             return View();
         }
 
@@ -57,15 +57,15 @@ namespace SalesSystemMVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,CPF,EnderecoId")] Pessoa pessoa)
+        public async Task<IActionResult> Create(Pessoa pessoa)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pessoa);
+               pessoa.PessoaTelefone.Add(new PessoaTelefone { Pessoa = pessoa, Telefone = pessoa.Telefone });
+                _context.Pessoa.Add(pessoa);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EnderecoId"] = new SelectList(_context.Endereco, "Id", "Id", pessoa.EnderecoId);
             return View(pessoa);
         }
 
@@ -76,13 +76,12 @@ namespace SalesSystemMVC.Controllers
             {
                 return NotFound();
             }
-
-            var pessoa = await _context.Pessoa.FindAsync(id);
+            
+            var pessoa = await _context.Pessoa.Include(p => p.Endereco).Include(tp => tp.PessoaTelefone).ThenInclude(t => t.Telefone).ThenInclude(t => t.TipoTelefone).FirstOrDefaultAsync( u => u.Id == id);
             if (pessoa == null)
             {
                 return NotFound();
             }
-            ViewData["EnderecoId"] = new SelectList(_context.Endereco, "Id", "Id", pessoa.EnderecoId);
             return View(pessoa);
         }
 
@@ -91,7 +90,7 @@ namespace SalesSystemMVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,CPF,EnderecoId")] Pessoa pessoa)
+        public async Task<IActionResult> Edit(int id, Pessoa pessoa)
         {
             if (id != pessoa.Id)
             {
@@ -102,7 +101,8 @@ namespace SalesSystemMVC.Controllers
             {
                 try
                 {
-                    _context.Update(pessoa);
+                    pessoa.PessoaTelefone.Add(new PessoaTelefone { Pessoa = pessoa, Telefone = pessoa.Telefone });
+                    _context.Pessoa.Update(pessoa);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

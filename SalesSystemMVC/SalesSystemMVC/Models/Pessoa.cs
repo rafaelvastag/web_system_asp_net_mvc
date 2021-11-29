@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace SalesSystemMVC.Models
@@ -14,7 +15,7 @@ namespace SalesSystemMVC.Models
         [Column("NOME")]
         public string Nome { get; set; }
         [Column("CPF")]
-        public int CPF { get; set; }
+        public long CPF { get; set; }
         [Column("ENDERECO")]
         public Endereco Endereco { get; set; }
 
@@ -22,6 +23,9 @@ namespace SalesSystemMVC.Models
         [ForeignKey("FK_PESSOA_ENDERECO")]
         public int EnderecoId { get; set; }
 
-        public virtual ICollection<PessoaTelefone> PessoaTelefone { get; set; }
+        public virtual ICollection<PessoaTelefone> PessoaTelefone { get; set; } = new List<PessoaTelefone>();
+
+        [NotMapped]
+        public Telefone Telefone { get; set; }
     }
 }

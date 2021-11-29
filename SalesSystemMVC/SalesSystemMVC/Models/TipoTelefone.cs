@@ -12,7 +12,7 @@ namespace SalesSystemMVC.Models
         [Column("ID")]
         public int Id { get; set; }
         [Column("TIPO")]
-        public int Tipo { get; set; }
+        public string Tipo { get; set; }
 
         public ICollection<Telefone> Telefones { get; set; } = new List<Telefone>();
     }
